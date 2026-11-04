@@ -1,0 +1,53 @@
+#opción 1
+def cargar_herramientas(inventario):
+    pass
+
+#opción 2
+def mostrar_inventario(inventario):
+    pass
+
+#opción 3
+def consultar_stock(inventario):
+    pass
+
+#opción 4
+def reporte_agotado(inventario):
+    pass
+
+#opción 5
+def alta_producto(inventario):
+    pass
+
+#opción 6
+def actualizar_stock(inventario):
+    pass
+
+
+
+
+
+def main():
+    inventario = [] 
+    opcion = 0 
+    while opcion != 7: #mientras que opcion sea distinta de 7
+        try: 
+            opcion = int(input('Seleccione una opción: ')) #el usuario ingresa la opción que desee
+            #validamos que eligió y llamamos a la función que corresponda
+            if opcion == 1: 
+                cargar_herramientas(inventario)
+            elif opcion == 2: 
+                mostrar_inventario(inventario)
+            elif opcion == 3:
+                consultar_stock(inventario)
+            elif opcion == 4:
+                reporte_agotado(inventario)
+            elif opcion == 5:
+                alta_producto(inventario)
+            elif opcion == 6:
+                actualizar_stock(inventario)
+            elif opcion != 7:  #si es distinta de 7 pero no es 1,2,3,4,5 o 6
+                raise ValueError('Opción fuera de rango (1 a 7).') #devolvemos error porque no se encuentra en el rango
+        except ValueError as e: #si ingresa un dato no válido (letra, caracter, negativo, etc.)
+            print(f'Error: {e}') #mostramos el error cometido
+
+main() #llamamos a la función main
