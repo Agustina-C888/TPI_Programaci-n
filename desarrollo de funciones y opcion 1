@@ -1,0 +1,62 @@
+def validar_nombre(nombre):
+    """Devuelve el nombre sin espacios al inicio y al final.
+    Si quedan vacío o eran solo espacios, lanza ValueError."""
+    nombre=nombre.strip()
+    if nombre=="":
+        raise ValueError("El nombre no puede estar vacio.")
+    return nombre
+
+def buscar_herramienta(inventario , nombre):
+    """Busca una herramienta ignorando mayusculas y espacios en los extremos-
+    Devuelve el diccionario que ya esta dentro de inventario , o None si no existe."""
+    for producto in inventario:
+        if producto["herramienta"].lower()==nombre.strip().lower():
+            return producto
+    return None
+
+def pedir_entero(mensaje):
+    """Pide un dato y lo convierte a entero.Si no se puede, lanza ValueError con un mensaje claro.
+    """
+    try:
+        return int(input(mensaje))
+    except ValueError:
+        raise ValueError("Debe ingresar un numero entero(sin letras ni decimales.)")
+
+    #Opcion 1 :Cargar Herramientas 
+
+def cargar_herramientas(inventario):
+    cantidad=0
+    while cantidad <=0:
+        try:
+            cantidad= pedir_entero("¿Cuantas herramientas desea cargar?")
+            if cantidad<=0:
+                raise ValueError("La cantidad de herramientas debe ser mayor a 0.")
+        except ValueError as e:
+            print(f"Error: {e}")
+
+    for i in range(cantidad):
+        print(f"Herramienta {i+1}de {cantidad}")
+
+        while True:
+            try:
+                nombre=validar_nombre (input("Nombre de la herramienta: "))
+                if buscar_herramienta(inventario, nombre) is not None:
+                    raise ValueError(f"La herramienta {nombre} ya existe en el inventario")
+                break
+            except ValueError as e:
+                print(f"error: {e}")
+
+    #Stock: se repite SOLO el stock , conservando el nombre valido-
+        while True:
+            try:
+                stock=pedir_entero("Stock inicial: ")
+                if stock <0:
+                    raise ValueError("El stock inicial no puede ser negativo.")
+                break
+            except ValueError as e:
+                  print(f"Error: {e}")
+        inventario.append({"herramienta": nombre, "cantidad": stock})
+        print(f'"{nombre}" cargada con {stock} unidades.')
+
+
+                       
