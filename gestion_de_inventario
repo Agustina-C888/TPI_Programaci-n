@@ -1,6 +1,58 @@
 #opción 1
 def cargar_herramientas(inventario):
-    pass
+    cantidad_herramentas = 0
+
+    while cantidad_herramentas <= 0:
+        try: 
+            cantidad_herramentas = int(input("Ingrese la cantidad de herramientas a cargar: "))
+            if cantidad_herramentas <= 0:
+                raise ValueError("Debe ingresar un número entero mayor a 0")
+            
+        except ValueError as e:
+            print(f"Error. {e}")
+            cantidad_herramentas = 0
+
+    for i in range(1,cantidad_herramentas +1):
+        while True:
+            nombre_herramienta = input(f"Ingrese el nombre de la {i} herramienta: ").strip().capitalize()
+            while not nombre_herramienta.replace(" ","").isalpha():
+                print("Error. no ingreso un nombre válido")
+                nombre_herramienta = input(f"Ingrese el nombre de la {i} herramienta: ").strip().capitalize()
+
+            nombre_repetido = False
+            
+            for herramienta in inventario:
+                if herramienta["herramienta"].lower() == nombre_herramienta.lower():
+                    nombre_repetido = True
+
+            try:
+                if nombre_repetido:
+                    raise ValueError("La herramienta ya existe.")
+                else:
+                    break
+
+            except ValueError as e:
+                print(f"Error: {e}")
+
+        cantidad_stock = -1
+
+        while cantidad_stock < 0:
+            try:
+                cantidad_stock = int(input("Ingrese el stock inicial: "))
+
+                if cantidad_stock < 0:
+                    raise ValueError("El stock no puede ser negativo.")
+
+            except ValueError as e:
+                print(f"Error: {e}")
+                cantidad_stock = -1
+
+        inventario.append({
+            "herramienta": nombre_herramienta,
+            "cantidad": cantidad_stock
+        })
+
+    print("Herramientas cargadas correctamente.")
 
 #opción 2
 def mostrar_inventario(inventario):
@@ -11,7 +63,7 @@ def consultar_stock(inventario):
     pass
 
 #opción 4
-def reporte_agotado(inventario):
+def reporte_agotados(inventario):
     pass
 
 #opción 5
@@ -30,8 +82,17 @@ def main():
     inventario = [] 
     opcion = 0 
     while opcion != 7: #mientras que opcion sea distinta de 7
+        print("--- SISTEMA DE INVENTARIO")
+        print("1. Cargar herramientas")
+        print("2. Mostrar inventario")
+        print("3. Consultar stock")
+        print("4. Reporte de agotados")
+        print("5. Alta de producto")
+        print("6. Actualizar stock")
+        print("7. Salir")
+        
         try: 
-            opcion = int(input('Seleccione una opción: ')) #el usuario ingresa la opción que desee
+            opcion = int(input("Seleccione una opción: ")) #el usuario ingresa la opción que desee
             #validamos que eligió y llamamos a la función que corresponda
             if opcion == 1: 
                 cargar_herramientas(inventario)
@@ -40,14 +101,14 @@ def main():
             elif opcion == 3:
                 consultar_stock(inventario)
             elif opcion == 4:
-                reporte_agotado(inventario)
+                reporte_agotados(inventario)
             elif opcion == 5:
                 alta_producto(inventario)
             elif opcion == 6:
                 actualizar_stock(inventario)
             elif opcion != 7:  #si es distinta de 7 pero no es 1,2,3,4,5 o 6
-                raise ValueError('Opción fuera de rango (1 a 7).') #devolvemos error porque no se encuentra en el rango
+                raise ValueError("Opción fuera de rango (1 a 7).") #devolvemos error porque no se encuentra en el rango
         except ValueError as e: #si ingresa un dato no válido (letra, caracter, negativo, etc.)
-            print(f'Error: {e}') #mostramos el error cometido
+            print(f"Error: {e}") #mostramos el error cometido
 
 main() #llamamos a la función main
