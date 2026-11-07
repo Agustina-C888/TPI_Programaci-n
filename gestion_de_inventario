@@ -1,88 +1,166 @@
-#opción 1
+# opción 1
 def cargar_herramientas(inventario):
-    cantidad_herramentas = 0
+    cantidad_herramientas = 0
 
-    while cantidad_herramentas <= 0:
-        try: 
-            cantidad_herramentas = int(input("Ingrese la cantidad de herramientas a cargar: "))
-            if cantidad_herramentas <= 0:
-                raise ValueError("Debe ingresar un número entero mayor a 0")
-            
+    while cantidad_herramientas <= 0:
+        try:
+            cantidad_herramientas = int(input("Ingrese la cantidad de herramientas a cargar: "))
+            if cantidad_herramientas <= 0:
+                raise ValueError("Debe ingresar un número entero mayor a 0.")
         except ValueError as e:
-            print(f"Error. {e}")
-            cantidad_herramentas = 0
+            print(f"Error: {e}")
+            cantidad_herramientas = 0
 
-    for i in range(1,cantidad_herramentas +1):
+    for i in range(1, cantidad_herramientas + 1):
+        # Nombre: se repite hasta que no esté vacío ni duplicado
         while True:
-            nombre_herramienta = input(f"Ingrese el nombre de la {i} herramienta: ").strip().capitalize()
-            while not nombre_herramienta.replace(" ","").isalpha():
-                print("Error. no ingreso un nombre válido")
-                nombre_herramienta = input(f"Ingrese el nombre de la {i} herramienta: ").strip().capitalize()
-
-            nombre_repetido = False
-            
-            for herramienta in inventario:
-                if herramienta["herramienta"].lower() == nombre_herramienta.lower():
-                    nombre_repetido = True
-
             try:
-                if nombre_repetido:
-                    raise ValueError("La herramienta ya existe.")
-                else:
-                    break
+                nombre_herramienta = input(f"Ingrese el nombre de la herramienta {i}: ").strip()
 
+                if nombre_herramienta == "":
+                    raise ValueError("Debe ingresar un nombre.")
+
+                for herramienta in inventario:
+                    if herramienta["herramienta"].lower() == nombre_herramienta.lower():
+                        raise ValueError("La herramienta ya existe.")
+
+                break
             except ValueError as e:
                 print(f"Error: {e}")
 
+        # Stock: se repite solo el stock, conservando el nombre válido
         cantidad_stock = -1
 
         while cantidad_stock < 0:
             try:
                 cantidad_stock = int(input("Ingrese el stock inicial: "))
-
                 if cantidad_stock < 0:
                     raise ValueError("El stock no puede ser negativo.")
-
             except ValueError as e:
                 print(f"Error: {e}")
                 cantidad_stock = -1
 
-        inventario.append({
-            "herramienta": nombre_herramienta,
-            "cantidad": cantidad_stock
-        })
+        inventario.append({"herramienta": nombre_herramienta, "cantidad": cantidad_stock})
 
-    print("Herramientas cargadas correctamente.")
+    print("Herramientas cargadas correctamente.\n")
 
-#opción 2
+
+# opción 2
 def mostrar_inventario(inventario):
-    pass
+    if len(inventario) == 0:
+        print("Todavía no hay herramientas cargadas.\n")
+    else:
+        print("--- INVENTARIO ---")
+        for herramienta in inventario:
+            print(f"Herramienta: {herramienta['herramienta']}")
+            print(f"Cantidad: {herramienta['cantidad']}\n")
 
-#opción 3
+
+# opción 3
 def consultar_stock(inventario):
-    pass
+    if len(inventario) == 0:
+        print("Todavía no hay herramientas cargadas.\n")
+        return
 
-#opción 4
+    nombre_herramienta = input("Ingrese el nombre de la herramienta a consultar: ").strip()
+    if nombre_herramienta == "":
+        raise ValueError("Debe ingresar un nombre.")
+
+    encontrada = False
+    for herramienta in inventario:
+        if herramienta["herramienta"].lower() == nombre_herramienta.lower():
+            encontrada = True
+            print(f"Stock disponible: {herramienta['cantidad']}\n")
+
+    if not encontrada:
+        print("La herramienta no se encuentra en el catálogo.\n")
+
+
+# opción 4
 def reporte_agotados(inventario):
-    pass
+    if len(inventario) == 0:
+        print("Todavía no hay herramientas cargadas.\n")
+        return
 
-#opción 5
+    hay_agotados = False
+    for herramienta in inventario:
+        if herramienta["cantidad"] == 0:
+            print(f"Herramienta: {herramienta['herramienta']}. Stock: {herramienta['cantidad']}")
+            hay_agotados = True
+
+    if not hay_agotados:
+        print("Ninguna herramienta tiene stock cero.\n")
+
+
+# opción 5
 def alta_producto(inventario):
-    pass
+    nombre_herramienta = input("Ingrese el nombre de la herramienta: ").strip()
 
-#opción 6
+    if nombre_herramienta == "":
+        raise ValueError("Debe ingresar un nombre.")
+
+    for herramienta in inventario:
+        if herramienta["herramienta"].lower() == nombre_herramienta.lower():
+            raise ValueError("La herramienta ya existe.")
+
+    # int() lanza ValueError si no es un entero; el error llega a main()
+    cantidad_stock = int(input("Ingrese el stock inicial: "))
+
+    if cantidad_stock < 0:
+        raise ValueError("El stock no puede ser negativo.")
+
+    inventario.append({"herramienta": nombre_herramienta, "cantidad": cantidad_stock})
+    print("Herramienta agregada correctamente.\n")
+
+
+# opción 6
 def actualizar_stock(inventario):
-    pass
+    if len(inventario) == 0:
+        print("Todavía no hay herramientas cargadas.\n")
+        return
 
+    nombre_herramienta = input("Ingrese el nombre de la herramienta: ").strip()
 
+    if nombre_herramienta == "":
+        raise ValueError("Debe ingresar un nombre.")
 
+    herramienta_encontrada = None
+    for herramienta in inventario:
+        if herramienta["herramienta"].lower() == nombre_herramienta.lower():
+            herramienta_encontrada = herramienta
+
+    if herramienta_encontrada is None:
+        print("La herramienta no se encuentra en el inventario.\n")
+        return
+
+    tipo_movimiento = input("Ingrese el tipo de movimiento (venta/ingreso): ").strip().lower()
+
+    if tipo_movimiento != "venta" and tipo_movimiento != "ingreso":
+        print("Tipo de movimiento inválido.\n")
+        return
+
+    # int() lanza ValueError si no es un entero; el error llega a main()
+    unidades = int(input("Ingrese la cantidad de unidades: "))
+
+    if unidades <= 0:
+        raise ValueError("La cantidad de unidades debe ser un número entero mayor que 0.")
+
+    if tipo_movimiento == "venta":
+        if unidades > herramienta_encontrada["cantidad"]:
+            raise ValueError("No hay suficiente stock para realizar la venta.")
+        herramienta_encontrada["cantidad"] -= unidades
+    else:
+        herramienta_encontrada["cantidad"] += unidades
+
+    print("Stock actualizado correctamente.\n")
 
 
 def main():
-    inventario = [] 
-    opcion = 0 
-    while opcion != 7: #mientras que opcion sea distinta de 7
-        print("--- SISTEMA DE INVENTARIO")
+    inventario = []
+    opcion = 0
+
+    while opcion != 7:
+        print("--- SISTEMA DE INVENTARIO ---")
         print("1. Cargar herramientas")
         print("2. Mostrar inventario")
         print("3. Consultar stock")
@@ -90,13 +168,13 @@ def main():
         print("5. Alta de producto")
         print("6. Actualizar stock")
         print("7. Salir")
-        
-        try: 
-            opcion = int(input("Seleccione una opción: ")) #el usuario ingresa la opción que desee
-            #validamos que eligió y llamamos a la función que corresponda
-            if opcion == 1: 
+
+        try:
+            opcion = int(input("Seleccione una opción: "))
+
+            if opcion == 1:
                 cargar_herramientas(inventario)
-            elif opcion == 2: 
+            elif opcion == 2:
                 mostrar_inventario(inventario)
             elif opcion == 3:
                 consultar_stock(inventario)
@@ -106,9 +184,10 @@ def main():
                 alta_producto(inventario)
             elif opcion == 6:
                 actualizar_stock(inventario)
-            elif opcion != 7:  #si es distinta de 7 pero no es 1,2,3,4,5 o 6
-                raise ValueError("Opción fuera de rango (1 a 7).") #devolvemos error porque no se encuentra en el rango
-        except ValueError as e: #si ingresa un dato no válido (letra, caracter, negativo, etc.)
-            print(f"Error: {e}") #mostramos el error cometido
+            elif opcion != 7:
+                raise ValueError("Opción fuera de rango (1 a 7).")
+        except ValueError as e:
+            print(f"Error: {e}\n")
 
-main() #llamamos a la función main
+
+main()
